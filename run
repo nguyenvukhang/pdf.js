@@ -1,0 +1,2 @@
+cp ~/repos/math/ref.pdf web/compressed.tracemonkey-pldi-09.pdf
+gulp server
