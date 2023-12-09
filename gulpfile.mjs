@@ -367,7 +367,7 @@ gulp.task(
       console.log();
       console.log("### Starting local server");
 
-      const { WebServer } = await import("./test/webserver.mjs");
+      const { WebServer } = await import("./server.mjs");
       const server = new WebServer();
       server.port = 8888;
       server.start();
