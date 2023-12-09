@@ -350,27 +350,12 @@ gulp.task(
 
 gulp.task(
   "server",
-  gulp.parallel(
-    function watchDevSandbox() {
-      gulp.watch(
-        [
-          "src/pdf.{sandbox,sandbox.external,scripting}.js",
-          "src/scripting_api/*.js",
-          "src/shared/scripting_utils.js",
-          "external/quickjs/*.js",
-        ],
-        { ignoreInitial: false },
-        gulp.series("dev-sandbox")
-      );
-    },
-    async function createServer() {
-      console.log();
-      console.log("### Starting local server");
-
-      const { WebServer } = await import("./server.mjs");
-      const server = new WebServer();
-      server.port = 8888;
-      server.start();
-    }
-  )
+  gulp.series(async function createServer() {
+    console.log();
+    console.log("### Starting local server");
+    const { WebServer } = await import("./server.mjs");
+    const server = new WebServer();
+    server.port = 8888;
+    server.start();
+  })
 );
