@@ -57,7 +57,7 @@ WebServer.prototype = {
     this.server = http.createServer(this._handler.bind(this));
     this.server.listen(this.port, this.host, callback);
     console.log(
-      "Server running at http://" + this.host + ":" + this.port + "/"
+      "Server running at http://" + this.host + ":" + this.port + "/",
     );
   },
   stop(callback) {
@@ -97,7 +97,6 @@ WebServer.prototype = {
       res.end("Bad request", "utf8");
       return;
     }
-    var queryPart = urlParts[3];
     var verbose = this.verbose;
 
     var methodHooks = this.hooks[req.method];
@@ -116,7 +115,7 @@ WebServer.prototype = {
     if (pathPart === "/favicon.ico") {
       fs.realpath(
         path.join(this.root, "test/resources/favicon.ico"),
-        checkFile
+        checkFile,
       );
       return;
     }
@@ -157,10 +156,6 @@ WebServer.prototype = {
         res.end("Redirected", "utf8");
         return;
       }
-      if (isDir) {
-        serveDirectoryIndex(filePath);
-        return;
-      }
 
       var range = req.headers.range;
       if (range && !disableRangeRequests) {
@@ -181,7 +176,7 @@ WebServer.prototype = {
         serveRequestedFileRange(
           filePath,
           start,
-          isNaN(end) ? fileSize : end + 1
+          isNaN(end) ? fileSize : end + 1,
         );
         return;
       }
@@ -191,101 +186,10 @@ WebServer.prototype = {
       serveRequestedFile(filePath);
     }
 
-    function escapeHTML(untrusted) {
-      // Escape untrusted input so that it can safely be used in a HTML response
-      // in HTML and in HTML attributes.
-      return untrusted
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#39;");
-    }
-
-    function serveDirectoryIndex(dir) {
-      res.setHeader("Content-Type", "text/html");
-      res.writeHead(200);
-
-      if (queryPart === "frame") {
-        res.end(
-          "<html><frameset cols=*,200><frame name=pdf>" +
-            '<frame src="' +
-            encodeURI(pathPart) +
-            '?side"></frameset></html>',
-          "utf8"
-        );
-        return;
-      }
-      var all = queryPart === "all";
-      fs.readdir(dir, function (err, files) {
-        if (err) {
-          res.end();
-          return;
-        }
-        res.write(
-          '<html><head><meta charset="utf-8"></head><body>' +
-            "<h1>PDFs of " +
-            pathPart +
-            "</h1>\n"
-        );
-        if (pathPart !== "/") {
-          res.write('<a href="..">..</a><br>\n');
-        }
-        files.forEach(function (file) {
-          var stat;
-          var item = pathPart + file;
-          var href = "";
-          var label = "";
-          var extraAttributes = "";
-          try {
-            stat = fs.statSync(path.join(dir, file));
-          } catch (e) {
-            href = encodeURI(item);
-            label = file + " (" + e + ")";
-            extraAttributes = ' style="color:red"';
-          }
-          if (stat) {
-            if (stat.isDirectory()) {
-              href = encodeURI(item);
-              label = file;
-            } else if (path.extname(file).toLowerCase() === ".pdf") {
-              href = "/web/viewer.html?file=" + encodeURIComponent(item);
-              label = file;
-              extraAttributes = ' target="pdf"';
-            } else if (all) {
-              href = encodeURI(item);
-              label = file;
-            }
-          }
-          if (label) {
-            res.write(
-              '<a href="' +
-                escapeHTML(href) +
-                '"' +
-                extraAttributes +
-                ">" +
-                escapeHTML(label) +
-                "</a><br>\n"
-            );
-          }
-        });
-        if (files.length === 0) {
-          res.write("<p>no files found</p>\n");
-        }
-        if (!all && queryPart !== "side") {
-          res.write(
-            "<hr><p>(only PDF files are shown, " +
-              '<a href="?all">show all</a>)</p>\n'
-          );
-        }
-        res.end("</body></html>");
-      });
-    }
-
     function serveRequestedFile(reqFilePath) {
       var stream = fs.createReadStream(reqFilePath, { flags: "rs" });
 
-      stream.on("error", function (error) {
+      stream.on("error", function (_) {
         res.writeHead(500);
         res.end();
       });
@@ -315,7 +219,7 @@ WebServer.prototype = {
         end: end - 1,
       });
 
-      stream.on("error", function (error) {
+      stream.on("error", function (_) {
         res.writeHead(500);
         res.end();
       });
@@ -328,7 +232,7 @@ WebServer.prototype = {
       res.setHeader("Content-Length", end - start);
       res.setHeader(
         "Content-Range",
-        "bytes " + start + "-" + (end - 1) + "/" + fileSize
+        "bytes " + start + "-" + (end - 1) + "/" + fileSize,
       );
       res.writeHead(206);
 
