@@ -29,17 +29,8 @@ See https://github.com/adobe-type-tools/cmap-resources
     />
     <title>PDF.js viewer</title>
 
-    <!--#if MOZCENTRAL-->
-    <!--<link rel="stylesheet" href="resource://pdf.js/web/viewer.css">-->
-    <!--#else-->
     <link rel="stylesheet" href="viewer.css" />
-    <!--#endif-->
 
-    <!--#if MOZCENTRAL-->
-    <!--<script src="resource://pdf.js/web/viewer.js"></script>-->
-    <!--#elif !MINIFIED-->
-    <!--<script src="viewer.js"></script>-->
-    <!--#elif /* Development mode. */-->
     <link
       rel="resource"
       type="application/l10n"
@@ -83,7 +74,6 @@ See https://github.com/adobe-type-tools/cmap-resources
     </script>
 
     <script src="viewer.js" type="module-shim"></script>
-    <!--#endif-->
   </head>
 
   <body tabindex="1">
@@ -376,7 +366,6 @@ See https://github.com/adobe-type-tools/cmap-resources
           class="secondaryToolbar hidden doorHangerRight"
         >
           <div id="secondaryToolbarButtonContainer">
-            <!--#if GENERIC-->
             <button
               id="secondaryOpenFile"
               class="secondaryToolbarButton visibleLargeView"
@@ -386,7 +375,6 @@ See https://github.com/adobe-type-tools/cmap-resources
             >
               <span data-l10n-id="open_file_label">Open</span>
             </button>
-            <!--#endif-->
 
             <button
               id="secondaryPrint"
@@ -408,11 +396,7 @@ See https://github.com/adobe-type-tools/cmap-resources
               <span data-l10n-id="save_label">Save</span>
             </button>
 
-            <!--#if GENERIC-->
             <div class="horizontalToolbarSeparator visibleLargeView"></div>
-            <!--#else-->
-            <!--        <div class="horizontalToolbarSeparator visibleMediumView"></div>-->
-            <!--#endif-->
 
             <button
               id="presentationMode"
